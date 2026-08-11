@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Strategic Realty Services &middot; Quick Check</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Jost:wght@400;500;600;700&family=Source+Sans+3:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy:#1c3f5e; --blue:#2e6da4; --midblue:#3d7ab5; --sky:#bcd6ea;
+  --panel:#e7f0f7; --cream:#faf6ec; --tan:#efe7d6; --tanline:#e2d7bf;
+  --ink:#22303a; --muted:#6b7280; --line:#d8e0e8; --good:#2f8f5b;
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+html,body{background:var(--cream);overflow-x:hidden;max-width:100%;}
+body{font-family:'Source Sans 3',-apple-system,'Segoe UI',sans-serif;color:var(--ink);line-height:1.5;font-size:16px;}
+h1,h2,h3,.disp{font-family:'Jost','Source Sans 3',sans-serif;color:var(--navy);}
+.wrap{max-width:640px;margin:0 auto;padding:0 16px 140px;}
+
+/* header */
+.hero{background:linear-gradient(158deg,#16324c 0%,#1c3f5e 55%,#27567e 100%);color:#eef4f9;
+  border-radius:0 0 22px 22px;padding:26px 20px 24px;box-shadow:0 10px 30px rgba(20,45,70,.18);}
+.hero .brandrow{display:flex;justify-content:space-between;align-items:center;}
+.hero .logo{font-family:'Jost';font-weight:700;font-size:15px;letter-spacing:.01em;}
+.hero .logo .a{color:#8fc1e9;} .hero .logo .b{color:#dfe7ee;}
+.hero .ai{font-family:'Jost';font-size:9.5px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;
+  color:#9db8cd;border:1px solid rgba(255,255,255,.28);border-radius:20px;padding:5px 10px;}
+.hero .kick{font-family:'Jost';font-size:11px;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:#8fc1e9;margin-top:20px;}
+.hero h1{color:#fff;font-size:25px;line-height:1.14;font-weight:700;margin-top:7px;}
+.hero p{color:#c3d6e6;font-size:14px;margin-top:9px;max-width:36ch;}
+
+/* section cards */
+.card{background:#fff;border:1px solid var(--line);border-radius:16px;padding:17px 16px;margin-top:14px;
+  box-shadow:0 3px 14px rgba(28,63,94,.05);}
+.card.first{margin-top:18px;}
+.q{font-family:'Jost';font-weight:600;font-size:15.5px;color:var(--navy);margin-bottom:3px;}
+.qsub{font-size:12.5px;color:var(--muted);margin-bottom:11px;}
+
+/* rating pills 1-10 */
+.rate{display:grid;grid-template-columns:repeat(10,1fr);gap:6px;}
+.rate button{width:100%;height:44px;padding:0;border:1.6px solid #c4d2de;background:#fff;border-radius:10px;
+  font-family:'Jost';font-weight:600;font-size:15px;color:var(--navy);cursor:pointer;transition:transform .09s ease,background .15s,border-color .15s,color .15s;}
+.rate button:active{transform:scale(.9);}
+.rate button.on{background:var(--navy);border-color:var(--navy);color:#fff;box-shadow:0 4px 12px rgba(28,63,94,.28);}
+.ends{display:flex;justify-content:space-between;font-size:11px;color:var(--muted);margin-top:7px;}
+
+/* chips */
+.chips{display:flex;flex-direction:column;gap:9px;}
+.chip{display:flex;align-items:center;gap:11px;border:1.6px solid #cdd8e2;background:#fff;border-radius:12px;
+  padding:12px 13px;cursor:pointer;transition:border-color .15s,background .15s;font-size:14.5px;}
+.chip .bx{width:22px;height:22px;border:2px solid #b6c3cf;border-radius:6px;flex:0 0 22px;display:flex;align-items:center;justify-content:center;transition:all .15s;}
+.chip .bx svg{width:14px;height:14px;opacity:0;transform:scale(.5);transition:all .15s;}
+.chip.on{border-color:var(--blue);background:#f2f8fc;}
+.chip.on .bx{background:var(--blue);border-color:var(--blue);}
+.chip.on .bx svg{opacity:1;transform:scale(1);}
+
+/* radio */
+.radio{display:flex;flex-direction:column;gap:9px;}
+.opt{display:flex;align-items:center;gap:11px;border:1.6px solid #cdd8e2;background:#fff;border-radius:12px;padding:12px 13px;cursor:pointer;transition:all .15s;font-size:14.5px;}
+.opt .dot{width:22px;height:22px;border:2px solid #b6c3cf;border-radius:50%;flex:0 0 22px;display:flex;align-items:center;justify-content:center;transition:all .15s;}
+.opt .dot i{width:10px;height:10px;border-radius:50%;background:var(--blue);opacity:0;transform:scale(.4);transition:all .15s;}
+.opt.on{border-color:var(--blue);background:#f2f8fc;}
+.opt.on .dot{border-color:var(--blue);}
+.opt.on .dot i{opacity:1;transform:scale(1);}
+
+/* inputs */
+label.fld{display:block;margin-top:13px;}
+label.fld:first-of-type{margin-top:0;}
+.fld .lab{font-family:'Jost';font-weight:600;font-size:14.5px;color:var(--navy);margin-bottom:6px;}
+input[type=text],textarea{width:100%;border:1.6px solid #cdd8e2;border-radius:11px;
+  padding:12px 13px;font-family:inherit;font-size:15px;color:var(--ink);background:#fff;transition:border-color .15s;}
+input:focus,textarea:focus{outline:none;border-color:var(--blue);}
+textarea{resize:vertical;min-height:74px;}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+@media(max-width:460px){.two{grid-template-columns:1fr;}}
+
+/* sticky submit */
+.bar{position:fixed;left:0;right:0;bottom:0;padding:14px 16px calc(14px + env(safe-area-inset-bottom));
+  background:linear-gradient(180deg,rgba(250,246,236,0) 0%,var(--cream) 34%);}
+.bar .inner{max-width:640px;margin:0 auto;}
+.submit{width:100%;border:none;border-radius:14px;padding:16px;font-family:'Jost';font-weight:700;font-size:17px;color:#fff;
+  background:linear-gradient(135deg,#2e6da4,#1c3f5e);cursor:pointer;box-shadow:0 8px 22px rgba(28,63,94,.32);transition:transform .1s,opacity .2s;}
+.submit:active{transform:scale(.985);}
+.submit[disabled]{opacity:.6;cursor:default;}
+.foot{text-align:center;font-size:11.5px;color:var(--muted);margin-top:22px;line-height:1.6;}
+.foot b{color:var(--navy);font-weight:600;}
+
+/* success overlay */
+.ov{position:fixed;inset:0;background:linear-gradient(158deg,#16324c,#1c3f5e 55%,#27567e);color:#eef4f9;
+  display:none;flex-direction:column;align-items:center;justify-content:flex-start;text-align:center;
+  padding:30px 26px calc(34px + env(safe-area-inset-bottom));z-index:50;overflow-y:auto;-webkit-overflow-scrolling:touch;}
+.ov.show{display:flex;animation:fade .4s ease;}
+.ov > :first-child{margin-top:auto;}
+.ov > :last-child{margin-bottom:auto;}
+@keyframes fade{from{opacity:0;}to{opacity:1;}}
+.ring{width:82px;height:82px;flex:0 0 82px;border-radius:50%;background:rgba(255,255,255,.1);display:flex;align-items:center;justify-content:center;margin-bottom:18px;
+  animation:pop .5s cubic-bezier(.2,1.3,.4,1);}
+@keyframes pop{from{transform:scale(.3);opacity:0;}to{transform:scale(1);opacity:1;}}
+.ring svg{width:44px;height:44px;}
+.ov h2{color:#fff;font-size:26px;margin-bottom:6px;}
+.ov .num{font-family:'Jost';font-weight:700;font-size:14px;letter-spacing:.16em;text-transform:uppercase;color:#8fc1e9;margin-bottom:18px;}
+.ov .flex{font-size:13.5px;color:#c3d6e6;max-width:36ch;line-height:1.6;}
+.ov .flex b{color:#fff;}
+.ov .scroll{width:100%;max-width:420px;overflow-y:auto;display:flex;flex-direction:column;align-items:center;}
+.rec{background:rgba(255,255,255,.09);border:1px solid rgba(255,255,255,.18);border-radius:16px;
+  padding:18px 20px;margin:4px 0 16px;text-align:left;width:100%;}
+.rec .tag{font-family:'Jost';font-weight:700;font-size:10.5px;letter-spacing:.18em;text-transform:uppercase;color:#8fc1e9;margin-bottom:12px;}
+.rec .row{display:flex;gap:12px;align-items:flex-start;margin-bottom:14px;}
+.rec .row:last-child{margin-bottom:0;}
+.rec .n{font-family:'Jost';font-weight:700;font-size:13px;color:#0e1621;background:#8fc1e9;border-radius:50%;
+  width:24px;height:24px;flex:0 0 24px;display:flex;align-items:center;justify-content:center;margin-top:1px;}
+.rec .t{font-size:14px;color:#dbe7f1;line-height:1.5;}
+.rec .t b{color:#fff;font-weight:700;}
+.rec .t .why{display:block;font-size:12.5px;color:#a9c2d6;margin-top:3px;}
+.spin{width:20px;height:20px;border:2.5px solid rgba(255,255,255,.4);border-top-color:#fff;border-radius:50%;display:inline-block;animation:sp .7s linear infinite;vertical-align:-4px;}
+@keyframes sp{to{transform:rotate(360deg);}}
+.err{display:none;background:#fdecec;border:1px solid #f3c3c3;color:#9a2c2c;border-radius:12px;padding:12px 14px;font-size:13.5px;margin-top:12px;}
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="brandrow">
+    <div class="logo"><span class="a">OPERATE</span><span class="b">BIGGER.</span></div>
+    <div class="ai">Built with AI</div>
+  </div>
+  <div class="kick">Strategic Realty Services &middot; AI Training</div>
+  <h1>Ninety seconds, six questions.</h1>
+  <p>This tells us where to start so the day is built for your team, not a generic class. There is no wrong answer and no studying required.</p>
+</div>
+
+<div class="wrap">
+
+  <!-- WHO -->
+  <div class="card first">
+    <div class="two">
+      <label class="fld"><div class="lab">Your name</div>
+        <input type="text" id="name" placeholder="First and last" autocomplete="name"></label>
+      <label class="fld"><div class="lab">Your role</div>
+        <input type="text" id="roleOther" placeholder="Optional, if not listed below"></label>
+    </div>
+    <div style="height:13px;"></div>
+    <div class="radio" data-key="role">
+      <div class="opt" data-val="Broker or partner"><div class="dot"><i></i></div><div>Broker or partner</div></div>
+      <div class="opt" data-val="Sales or leasing agent"><div class="dot"><i></i></div><div>Sales or leasing agent</div></div>
+      <div class="opt" data-val="Property manager"><div class="dot"><i></i></div><div>Property manager</div></div>
+      <div class="opt" data-val="Accounting or bookkeeping"><div class="dot"><i></i></div><div>Accounting or bookkeeping</div></div>
+      <div class="opt" data-val="Admin or assistant"><div class="dot"><i></i></div><div>Admin or assistant</div></div>
+    </div>
+  </div>
+
+  <!-- SCORE -->
+  <div class="card">
+    <div class="q">How would you score yourself with AI today?</div>
+    <div class="qsub">1 means never touched it. 10 means you use it every day and know what you are doing. Most people land around a 3, and that is the sweet spot for this training.</div>
+    <div class="rate" data-key="skillNow"></div>
+  </div>
+
+  <!-- TOOLS -->
+  <div class="card">
+    <div class="q">Which of these have you actually used?</div>
+    <div class="qsub">Check all that apply. "Opened it once" counts.</div>
+    <div class="chips" data-key="tools">
+      <div class="chip" data-val="ChatGPT"></div>
+      <div class="chip" data-val="Claude"></div>
+      <div class="chip" data-val="Gemini"></div>
+      <div class="chip" data-val="Copilot"></div>
+      <div class="chip" data-val="An AI feature inside software we already use"></div>
+      <div class="chip" data-val="None of these yet"></div>
+    </div>
+  </div>
+
+  <!-- ACCOUNT -->
+  <div class="card">
+    <div class="q">Do you have a paid account on any of them?</div>
+    <div class="qsub">Only asking so we know what you will be working with in the room.</div>
+    <div class="radio" data-key="account">
+      <div class="opt" data-val="Yes, I pay for one"><div class="dot"><i></i></div><div>Yes, I pay for one</div></div>
+      <div class="opt" data-val="Free version only"><div class="dot"><i></i></div><div>Free version only</div></div>
+      <div class="opt" data-val="No account yet"><div class="dot"><i></i></div><div>No account yet</div></div>
+      <div class="opt" data-val="Not sure"><div class="dot"><i></i></div><div>Not sure</div></div>
+    </div>
+  </div>
+
+  <!-- WANT -->
+  <div class="card">
+    <div class="q">What is one thing you want to walk out able to do?</div>
+    <div class="qsub">Say it however it comes out. The blunter the better.</div>
+    <textarea id="wants" placeholder="For example: stop rewriting the same tenant emails, or get through lease documents faster..."></textarea>
+  </div>
+
+  <div class="err" id="err"></div>
+
+  <div class="foot">
+    Your answers go straight to AJ and are used to build the day.<br>
+    <b>This form was built by talking to an AI.</b> That is a preview of the point.
+  </div>
+</div>
+
+<div class="bar"><div class="inner">
+  <button class="submit" id="send">Send it</button>
+</div></div>
+
+<!-- SUCCESS -->
+<div class="ov" id="ov">
+  <div class="ring"><svg viewBox="0 0 52 52"><path fill="none" stroke="#8fc1e9" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" d="M14 27l8 8 16-18"/></svg></div>
+  <h2>Got it. Thank you.</h2>
+  <div class="num" id="ovnum">Recorded</div>
+  <div class="scroll">
+    <div class="rec">
+      <div class="tag">Two things to do before the session</div>
+      <div class="row">
+        <div class="n">1</div>
+        <div class="t"><b>If you do not already have a favorite, use Claude.</b>
+          <span class="why">claude.ai. If you already live in ChatGPT, stay there. Just do not show up still deciding.</span></div>
+      </div>
+      <div class="row">
+        <div class="n">2</div>
+        <div class="t"><b>Pay the $20 a month.</b>
+          <span class="why">The free version runs out mid-thought and forgets you between conversations. The paid one remembers your work and stays with you all day. Everyone who has skipped this has regretted it by lunch.</span></div>
+      </div>
+    </div>
+    <div class="flex">See you at the session, and bring the messy stuff you actually do all week. <b>That is what we are going to point this at.</b></div>
+  </div>
+</div>
+
+<script>
+/* ============================================================
+   PASTE YOUR DEPLOYED GOOGLE APPS SCRIPT WEB APP URL BELOW.
+   It looks like: https://script.google.com/macros/s/AKfy..../exec
+   This must be a NEW deployment on a NEW sheet, not the PBSO one.
+   ============================================================ */
+const WEB_APP_URL = "PASTE_YOUR_APPS_SCRIPT_WEB_APP_URL_HERE";
+
+const state = { skillNow:"", tools:[], role:"", account:"" };
+const CHECK = '<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>';
+
+/* build 1-10 rating rows */
+document.querySelectorAll('.rate').forEach(row=>{
+  const key=row.dataset.key;
+  for(let i=1;i<=10;i++){
+    const b=document.createElement('button');
+    b.textContent=i; b.dataset.v=i;
+    b.onclick=()=>{state[key]=String(i);row.querySelectorAll('button').forEach(x=>x.classList.remove('on'));b.classList.add('on');};
+    row.appendChild(b);
+  }
+  const ends=document.createElement('div');ends.className='ends';
+  ends.innerHTML='<span>1 &middot; never touched it</span><span>use it daily &middot; 10</span>';
+  row.after(ends);
+});
+
+/* chips multiselect */
+document.querySelectorAll('.chips').forEach(group=>{
+  const key=group.dataset.key;
+  group.querySelectorAll('.chip').forEach(c=>{
+    c.insertAdjacentHTML('afterbegin','<div class="bx">'+CHECK+'</div>');
+    const label=document.createElement('div');label.textContent=c.dataset.val;c.appendChild(label);
+    c.onclick=()=>{
+      const v=c.dataset.val;
+      const isNone = v==='None of these yet';
+      /* "None of these yet" is exclusive, both directions */
+      if(isNone && !c.classList.contains('on')){
+        group.querySelectorAll('.chip').forEach(x=>x.classList.remove('on'));
+        state[key]=[];
+      } else if(!isNone){
+        const none=[...group.querySelectorAll('.chip')].find(x=>x.dataset.val==='None of these yet');
+        if(none && none.classList.contains('on')){
+          none.classList.remove('on');
+          state[key]=state[key].filter(x=>x!=='None of these yet');
+        }
+      }
+      c.classList.toggle('on');
+      if(c.classList.contains('on')) state[key].push(v);
+      else state[key]=state[key].filter(x=>x!==v);
+    };
+  });
+});
+
+/* radio */
+document.querySelectorAll('.radio').forEach(group=>{
+  const key=group.dataset.key;
+  group.querySelectorAll('.opt').forEach(o=>{
+    o.onclick=()=>{group.querySelectorAll('.opt').forEach(x=>x.classList.remove('on'));o.classList.add('on');state[key]=o.dataset.val;};
+  });
+});
+
+const $=id=>document.getElementById(id);
+
+$('send').onclick=async()=>{
+  const btn=$('send'), err=$('err'); err.style.display='none';
+
+  const payload={
+    name:$('name').value.trim(),
+    role:state.role,
+    roleOther:$('roleOther').value.trim(),
+    skillNow:state.skillNow,
+    tools:state.tools.join(', '),
+    account:state.account,
+    wants:$('wants').value.trim()
+  };
+
+  const fail=m=>{err.textContent=m;err.style.display='block';err.scrollIntoView({behavior:'smooth',block:'center'});};
+
+  if(!payload.name){ return fail('Add your name so we know who is who. Everything else is quick.'); }
+  if(!payload.skillNow){ return fail('Tap a number for how you would score yourself with AI today.'); }
+
+  btn.disabled=true; btn.innerHTML='<span class="spin"></span> Sending...';
+  try{
+    const res=await fetch(WEB_APP_URL,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(payload)});
+    const data=await res.json();
+    if(!data.ok) throw new Error(data.error||'save failed');
+    if(data.count){$('ovnum').textContent='Response #'+data.count+' logged';}
+    $('ov').classList.add('show');
+    window.scrollTo(0,0);
+  }catch(e){
+    btn.disabled=false; btn.textContent='Send it';
+    fail('That did not send. Check your connection and tap send again. If it keeps failing, just reply to the email instead.');
+  }
+};
+</script>
+</body>
+</html>
