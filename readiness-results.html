@@ -147,8 +147,7 @@ async function load(){
   $('load').disabled = true; $('load').textContent = 'Loading...';
   clearNote();
   try{
-    const res = await fetch(WEB_APP_URL + '?key=' + encodeURIComponent(key) + '&t=' + Date.now());
-    const d = await res.json();
+    const d = await getJSON(WEB_APP_URL + '?key=' + encodeURIComponent(key) + '&t=' + Date.now());
     if(d.locked){ throw new Error('Wrong key. ' + d.count + ' response(s) are in the sheet.'); }
     if(!d.ok){ throw new Error(d.error || 'could not read'); }
     last = d;
@@ -159,6 +158,26 @@ async function load(){
   }finally{
     $('load').disabled = false; $('load').textContent = 'Load results';
   }
+}
+
+/* Apps Script sometimes returns an unreadable reply on the first hit after it
+   has been idle, which surfaced as "the string did not match the expected
+   pattern". Reading is safe to repeat, so retry instead of showing that. */
+async function getJSON(url, attempts){
+  attempts = attempts || 3;
+  let lastErr;
+  for(let i = 1; i <= attempts; i++){
+    try{
+      const res = await fetch(url);
+      const text = await res.text();
+      try{ return JSON.parse(text); }
+      catch(_){ throw new Error('The sheet sent back something unreadable.'); }
+    }catch(err){
+      lastErr = err;
+      if(i < attempts) await new Promise(r => setTimeout(r, 700 * i));
+    }
+  }
+  throw lastErr;
 }
 
 function render(d){

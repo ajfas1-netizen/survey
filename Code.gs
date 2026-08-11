@@ -30,7 +30,7 @@ var SHEET_NAME = 'Responses';
 var READ_KEY = 'SET_THIS_IN_APPS_SCRIPT_ONLY';
 
 var HEADERS = [
-  'Timestamp','Name','Role','RoleOther','SkillNow','Tools','Account','Wants'
+  'Timestamp','Name','Role','RoleOther','SkillNow','Tools','Account','Wants','SubmitId'
 ];
 
 function sheet_() {
@@ -38,6 +38,17 @@ function sheet_() {
   var sh = ss.getSheetByName(SHEET_NAME) || ss.insertSheet(SHEET_NAME);
   if (sh.getLastRow() === 0) sh.appendRow(HEADERS);
   return sh;
+}
+
+/**
+ * Delete every response row and leave the header in place.
+ * Run from the function dropdown in the editor after testing.
+ */
+function clearResponses() {
+  var sh = sheet_();
+  var last = sh.getLastRow();
+  if (last > 1) sh.deleteRows(2, last - 1);
+  setupHeaders();
 }
 
 /** Run once from the editor to create the header row. */
@@ -77,10 +88,31 @@ function doPost(e) {
       return json_({ ok: false, error: 'Empty submission, nothing was saved.' });
     }
     var sh = sheet_();
+
+    /**
+     * The phone sends a one-time id with each submission. Apps Script sometimes
+     * writes the row but garbles the reply, which looks like a failure and makes
+     * people tap send again. If we have already seen this id, report success
+     * without writing a second row for the same person.
+     */
+    var sid = String(p.submitId || '').trim();
+    if (sid) {
+      var lastRow = sh.getLastRow();
+      if (lastRow > 1) {
+        var idCol = HEADERS.indexOf('SubmitId') + 1;
+        var seen = sh.getRange(2, idCol, lastRow - 1, 1).getValues();
+        for (var i = 0; i < seen.length; i++) {
+          if (String(seen[i][0]).trim() === sid) {
+            return json_({ ok: true, count: lastRow - 1, duplicate: true });
+          }
+        }
+      }
+    }
+
     sh.appendRow([
       new Date(),
       p.name || '', p.role || '', p.roleOther || '',
-      p.skillNow || '', p.tools || '', p.account || '', p.wants || ''
+      p.skillNow || '', p.tools || '', p.account || '', p.wants || '', sid
     ]);
     SpreadsheetApp.flush();
     return json_({ ok: true, count: sh.getLastRow() - 1 });

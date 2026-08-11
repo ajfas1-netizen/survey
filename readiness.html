@@ -21,7 +21,8 @@ h1,h2,h3,.disp{font-family:'Jost','Source Sans 3',sans-serif;color:var(--navy);}
 
 /* header */
 .hero{background:linear-gradient(158deg,#16324c 0%,#1c3f5e 55%,#27567e 100%);color:#eef4f9;
-  border-radius:0 0 22px 22px;padding:26px 20px 24px;box-shadow:0 10px 30px rgba(20,45,70,.18);}
+  border-radius:0 0 22px 22px;padding:26px 0 24px;box-shadow:0 10px 30px rgba(20,45,70,.18);}
+.hero .inner{max-width:640px;margin:0 auto;padding:0 16px;}
 .hero .brandrow{display:flex;justify-content:space-between;align-items:center;}
 .hero .logo{font-family:'Jost';font-weight:700;font-size:15px;letter-spacing:.01em;}
 .hero .logo .a{color:#8fc1e9;} .hero .logo .b{color:#dfe7ee;}
@@ -74,6 +75,7 @@ input[type=text],textarea{width:100%;border:1.6px solid #cdd8e2;border-radius:11
 input:focus,textarea:focus{outline:none;border-color:var(--blue);}
 textarea{resize:vertical;min-height:74px;}
 .two{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.two > label.fld{margin-top:0;}
 @media(max-width:460px){.two{grid-template-columns:1fr;}}
 
 /* sticky submit */
@@ -122,6 +124,7 @@ textarea{resize:vertical;min-height:74px;}
 <body>
 
 <div class="hero">
+ <div class="inner">
   <div class="brandrow">
     <div class="logo"><span class="a">OPERATE</span><span class="b">BIGGER.</span></div>
     <div class="ai">Built with AI</div>
@@ -129,6 +132,7 @@ textarea{resize:vertical;min-height:74px;}
   <div class="kick">Strategic Realty Services &middot; AI Training</div>
   <h1>Ninety seconds, six questions.</h1>
   <p>This tells us where to start so the day is built for your team, not a generic class. There is no wrong answer and no studying required.</p>
+ </div>
 </div>
 
 <div class="wrap">
@@ -234,6 +238,12 @@ textarea{resize:vertical;min-height:74px;}
    ============================================================ */
 const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbwss3FziFNT9vFV-gARYN7tNGCnYPH887wNVDS-5R6szsKVwwuSrRJ3vFrBOmgHYVFi/exec";
 
+/* One id per page load. If the row is written but the reply is garbled, the
+   retry carries the same id and the server refuses to write a second row. */
+const SUBMIT_ID = (window.crypto && crypto.randomUUID)
+  ? crypto.randomUUID()
+  : 'id-' + Date.now() + '-' + Math.random().toString(36).slice(2);
+
 const state = { skillNow:"", tools:[], role:"", account:"" };
 const CHECK = '<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>';
 
@@ -298,7 +308,8 @@ $('send').onclick=async()=>{
     skillNow:state.skillNow,
     tools:state.tools.join(', '),
     account:state.account,
-    wants:$('wants').value.trim()
+    wants:$('wants').value.trim(),
+    submitId:SUBMIT_ID
   };
 
   const fail=m=>{err.textContent=m;err.style.display='block';err.scrollIntoView({behavior:'smooth',block:'center'});};
@@ -308,17 +319,44 @@ $('send').onclick=async()=>{
 
   btn.disabled=true; btn.innerHTML='<span class="spin"></span> Sending...';
   try{
-    const res=await fetch(WEB_APP_URL,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(payload)});
-    const data=await res.json();
-    if(!data.ok) throw new Error(data.error||'save failed');
+    const data=await send(payload);
     if(data.count){$('ovnum').textContent='Response #'+data.count+' logged';}
     $('ov').classList.add('show');
     window.scrollTo(0,0);
   }catch(e){
     btn.disabled=false; btn.textContent='Send it';
-    fail('That did not send. Check your connection and tap send again. If it keeps failing, just reply to the email instead.');
+    fail(e && e.definitive
+      ? e.message
+      : 'That did not send. Check your connection and tap send again. If it keeps failing, just reply to the email instead.');
   }
 };
+
+/* Apps Script occasionally returns an unreadable reply on the first hit after
+   it has been idle. Retry quietly rather than showing the person an error. */
+async function send(payload){
+  let lastErr;
+  for(let attempt=1; attempt<=3; attempt++){
+    try{
+      const res=await fetch(WEB_APP_URL,{method:'POST',
+        headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(payload)});
+      const text=await res.text();
+      let data;
+      try{ data=JSON.parse(text); }
+      catch(_){ throw new Error('unreadable reply'); }
+      if(!data.ok){
+        const e=new Error(data.error||'save failed');
+        e.definitive=true;   /* the server answered clearly, retrying will not help */
+        throw e;
+      }
+      return data;
+    }catch(err){
+      if(err && err.definitive) throw err;
+      lastErr=err;
+      if(attempt<3) await new Promise(r=>setTimeout(r,700*attempt));
+    }
+  }
+  throw lastErr;
+}
 </script>
 </body>
 </html>
