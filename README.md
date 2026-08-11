@@ -27,7 +27,9 @@ Use a **new** Google Sheet, not the PBSO one.
 1. Create a Google Sheet, name it "Strategic Realty Readiness".
 2. Extensions > Apps Script.
 3. Delete the starter code, paste in all of `Code.gs`, and save.
-4. `READ_KEY` at the top is already set. It is the password for the readout page, nothing else. The form never needs it, only you do when you open the readout. Change it here any time; whatever this says is what you type on the readout page.
+4. Set `READ_KEY` near the top to a value only you know. It is the password for the readout page and nothing else. The form never needs it; only you do, when you open the readout.
+
+   **This repo is public, so the real key never gets committed here.** The file ships with the placeholder `SET_THIS_IN_APPS_SCRIPT_ONLY`. Set the real value in the Apps Script editor and leave this file alone. If you ever paste this file over your script you will wipe the live key, and the readout will stay locked until you set it again and redeploy.
 5. In the function dropdown pick `setupHeaders`, click Run, authorize when Google prompts.
 
 ### 2. Deploy

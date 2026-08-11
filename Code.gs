@@ -21,9 +21,13 @@ var SHEET_NAME = 'Responses';
  * Gate on the readout. The form itself never needs this.
  * The results page is on public GitHub Pages, and this data has your client's
  * staff names on it, so the roster only comes back when the key matches.
- * Change this to something only you know.
+ *
+ * IMPORTANT: this repository is public, so the real key must NEVER be committed
+ * here. Set the live value in the Apps Script editor only, and leave this file
+ * with the placeholder. If you paste this file over your script, you will wipe
+ * your live key and lock yourself out of the readout until you set it again.
  */
-var READ_KEY = 'TKKDsTqdEDY';
+var READ_KEY = 'SET_THIS_IN_APPS_SCRIPT_ONLY';
 
 var HEADERS = [
   'Timestamp','Name','Role','RoleOther','SkillNow','Tools','Account','Wants'
